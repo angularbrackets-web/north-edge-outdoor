@@ -149,21 +149,17 @@
   .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(250, 250, 248, 0.82) 0%,
-      rgba(250, 250, 248, 0.7) 50%,
-      rgba(250, 250, 248, 0.88) 100%
-    );
+    background:
+      linear-gradient(to bottom, rgba(250, 250, 248, 0.6) 0%, transparent 15%),
+      linear-gradient(to bottom, transparent 80%, rgba(250, 250, 248, 0.7) 100%),
+      linear-gradient(to right, rgba(250, 250, 248, 0.78) 0%, rgba(250, 250, 248, 0.45) 45%, rgba(250, 250, 248, 0.1) 75%);
   }
 
   :global(.dark) .hero-overlay {
-    background: linear-gradient(
-      to bottom,
-      rgba(10, 15, 13, 0.82) 0%,
-      rgba(10, 15, 13, 0.7) 50%,
-      rgba(10, 15, 13, 0.88) 100%
-    );
+    background:
+      linear-gradient(to bottom, rgba(10, 15, 13, 0.5) 0%, transparent 15%),
+      linear-gradient(to bottom, transparent 80%, rgba(10, 15, 13, 0.8) 100%),
+      linear-gradient(to right, rgba(10, 15, 13, 0.82) 0%, rgba(10, 15, 13, 0.55) 45%, rgba(10, 15, 13, 0.2) 75%);
   }
 
   .hero-content {
