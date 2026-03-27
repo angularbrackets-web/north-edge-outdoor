@@ -95,25 +95,27 @@
   <FlowingPaths />
 
   <div class="hero-content">
-    <span bind:this={brandRef} class="hero-brand">North Edge Outdoor</span>
+    <div class="hero-card">
+      <span bind:this={brandRef} class="hero-brand">North Edge Outdoor</span>
 
-    <h1 bind:this={headlineRef} class="hero-headline">
-      Your Property,<br />Every Season
-    </h1>
+      <h1 bind:this={headlineRef} class="hero-headline">
+        Your Property,<br />Every Season
+      </h1>
 
-    <p bind:this={subRef} class="hero-sub">
-      Year-round lawn care, landscaping, and snow removal in Edmonton.
-      One company, no gaps, no excuses.
-    </p>
+      <p bind:this={subRef} class="hero-sub">
+        Year-round lawn care, landscaping, and snow removal in Edmonton.
+        One company, no gaps, no excuses.
+      </p>
 
-    <div bind:this={ctaRef} class="hero-cta">
-      <a href="#contact" class="cta-primary">Get a Free Estimate</a>
-      <a href={phoneHref} class="cta-phone">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-        </svg>
-        {phoneNumber}
-      </a>
+      <div bind:this={ctaRef} class="hero-cta">
+        <a href="#contact" class="cta-primary">Get a Free Estimate</a>
+        <a href={phoneHref} class="cta-phone">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          {phoneNumber}
+        </a>
+      </div>
     </div>
   </div>
 
@@ -154,13 +156,35 @@
     max-width: var(--max-w-wide);
     margin: 0 auto;
     width: 100%;
-    color: #fff;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3);
   }
 
   @media (min-width: 768px) {
     .hero-content {
       padding: 7rem var(--container-padding) 5rem;
+    }
+  }
+
+  /* ── Glass card ── */
+  .hero-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1rem;
+    padding: var(--space-10) var(--space-8);
+    max-width: 640px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  }
+
+  :global(.dark) .hero-card {
+    background: rgba(10, 15, 13, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (min-width: 768px) {
+    .hero-card {
+      padding: var(--space-12) var(--space-10);
     }
   }
 
@@ -173,7 +197,7 @@
     font-weight: 500;
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--color-brand);
     margin-bottom: var(--space-6);
   }
 
@@ -186,7 +210,7 @@
     line-height: var(--leading-tight);
     letter-spacing: var(--tracking-tightest);
     text-transform: uppercase;
-    color: #fff;
+    color: var(--color-text);
     margin: 0;
     max-width: 14ch;
   }
@@ -197,7 +221,7 @@
     font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: var(--leading-body);
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--color-text-secondary);
     margin-top: var(--space-6);
     max-width: var(--max-w-reading);
   }
@@ -239,9 +263,9 @@
     gap: var(--space-2);
     height: 52px;
     padding: 0 var(--space-6);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background: rgba(0, 0, 0, 0.2);
-    color: #fff;
+    border: 1px solid var(--color-border-strong);
+    background: transparent;
+    color: var(--color-text);
     font-family: var(--font-body);
     font-weight: 500;
     font-size: var(--text-sm);
@@ -253,8 +277,8 @@
   }
 
   .cta-phone:hover {
-    border-color: rgba(255, 255, 255, 0.8);
-    background-color: rgba(0, 0, 0, 0.35);
+    border-color: var(--color-text);
+    background-color: var(--color-surface);
   }
 
   /* ── Scroll cue ── */
@@ -269,7 +293,7 @@
   .scroll-line {
     width: 1px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: var(--color-brand);
     transform: scaleY(0);
     transform-origin: top center;
   }
