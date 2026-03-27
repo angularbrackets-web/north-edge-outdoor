@@ -89,7 +89,7 @@
     >
       <source src="/media/hero/Lawn_care_on_202603271642.mp4" type="video/mp4" />
     </video>
-    <div class="hero-overlay"></div>
+    <!-- overlay removed: video plays at full vibrancy -->
   </div>
 
   <FlowingPaths />
@@ -146,21 +146,6 @@
     object-fit: cover;
   }
 
-  .hero-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(to bottom, rgba(250, 250, 248, 0.6) 0%, transparent 15%),
-      linear-gradient(to bottom, transparent 80%, rgba(250, 250, 248, 0.7) 100%),
-      linear-gradient(to right, rgba(250, 250, 248, 0.78) 0%, rgba(250, 250, 248, 0.45) 45%, rgba(250, 250, 248, 0.1) 75%);
-  }
-
-  :global(.dark) .hero-overlay {
-    background:
-      linear-gradient(to bottom, rgba(10, 15, 13, 0.5) 0%, transparent 15%),
-      linear-gradient(to bottom, transparent 80%, rgba(10, 15, 13, 0.8) 100%),
-      linear-gradient(to right, rgba(10, 15, 13, 0.82) 0%, rgba(10, 15, 13, 0.55) 45%, rgba(10, 15, 13, 0.2) 75%);
-  }
 
   .hero-content {
     position: relative;
@@ -169,6 +154,8 @@
     max-width: var(--max-w-wide);
     margin: 0 auto;
     width: 100%;
+    color: #fff;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3);
   }
 
   @media (min-width: 768px) {
@@ -186,7 +173,7 @@
     font-weight: 500;
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: var(--color-brand);
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: var(--space-6);
   }
 
@@ -199,7 +186,7 @@
     line-height: var(--leading-tight);
     letter-spacing: var(--tracking-tightest);
     text-transform: uppercase;
-    color: var(--color-text);
+    color: #fff;
     margin: 0;
     max-width: 14ch;
   }
@@ -210,7 +197,7 @@
     font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: var(--leading-body);
-    color: var(--color-text-secondary);
+    color: rgba(255, 255, 255, 0.85);
     margin-top: var(--space-6);
     max-width: var(--max-w-reading);
   }
@@ -252,9 +239,9 @@
     gap: var(--space-2);
     height: 52px;
     padding: 0 var(--space-6);
-    border: 1px solid var(--color-border-strong);
-    background: transparent;
-    color: var(--color-text);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
     font-family: var(--font-body);
     font-weight: 500;
     font-size: var(--text-sm);
@@ -266,8 +253,8 @@
   }
 
   .cta-phone:hover {
-    border-color: var(--color-text);
-    background-color: var(--color-surface);
+    border-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 0, 0, 0.35);
   }
 
   /* ── Scroll cue ── */
@@ -282,7 +269,7 @@
   .scroll-line {
     width: 1px;
     height: 40px;
-    background-color: var(--color-brand);
+    background-color: rgba(255, 255, 255, 0.7);
     transform: scaleY(0);
     transform-origin: top center;
   }
