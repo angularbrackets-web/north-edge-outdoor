@@ -166,7 +166,7 @@
 
   /* ── Glass card ── */
   .hero-card {
-    background: rgba(255, 255, 255, 0.4);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.55) 100%);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -177,7 +177,7 @@
   }
 
   :global(.dark) .hero-card {
-    background: rgba(10, 15, 13, 0.4);
+    background: linear-gradient(to bottom, rgba(10, 15, 13, 0.2) 0%, rgba(10, 15, 13, 0.55) 100%);
     border-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
