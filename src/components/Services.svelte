@@ -10,24 +10,28 @@
     {
       icon: 'lawn',
       title: 'Lawn Care',
+      image: '/media/lawn-care/Suburban_lawn_meets_202603271702.jpeg',
       description:
         'Weekly mowing, edging, fertilization, and aeration. We keep your lawn thick, green, and competition-worthy from spring thaw through fall.',
     },
     {
       icon: 'landscape',
       title: 'Landscaping',
+      image: '/media/landscaping/Construction_worker_building_202603271705.jpeg',
       description:
         'Design and installation of beds, retaining walls, patios, and planting. Hardscape and softscape that fits Edmonton\'s climate.',
     },
     {
       icon: 'snow',
       title: 'Snow Removal',
+      image: '/media/Truck_pushing_snow_202603271709.jpeg',
       description:
         'Residential and commercial clearing with 24-hour response. Plowing, sanding, and sidewalk service — no storm is too early.',
     },
     {
       icon: 'seasonal',
       title: 'Seasonal Packages',
+      image: '/media/cleanup/Workers_clearing_autumn_202603271710.jpeg',
       description:
         'One contract covers every month. Spring cleanup, summer maintenance, fall prep, and winter clearing — seamless year-round care.',
     },
@@ -72,34 +76,13 @@
           class="service-card"
           bind:this={cards[i]}
         >
-          <div class="service-icon">
-            {#if service.icon === 'lawn'}
-              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 28c2-6 6-10 12-10s10 4 12 10"/>
-                <path d="M16 18V6"/>
-                <path d="M12 10l4-4 4 4"/>
-              </svg>
-            {:else if service.icon === 'landscape'}
-              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 28l8-16 6 10 4-6 6 12"/>
-                <circle cx="24" cy="8" r="3"/>
-              </svg>
-            {:else if service.icon === 'snow'}
-              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M16 4v24M4 16h24"/>
-                <path d="M7.5 7.5l17 17M24.5 7.5l-17 17"/>
-                <path d="M16 4l-2 3h4l-2-3zM16 28l-2-3h4l-2 3z"/>
-              </svg>
-            {:else}
-              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="16" cy="16" r="11"/>
-                <path d="M16 8v8l5 3"/>
-                <path d="M26 6l2-2M6 6L4 4"/>
-              </svg>
-            {/if}
+          <div class="service-image">
+            <img src={service.image} alt={service.title} loading="lazy" />
           </div>
-          <h3 class="service-title">{service.title}</h3>
-          <p class="service-description">{service.description}</p>
+          <div class="service-body">
+            <h3 class="service-title">{service.title}</h3>
+            <p class="service-description">{service.description}</p>
+          </div>
         </div>
       {/each}
     </div>
@@ -172,9 +155,9 @@
 
   /* ── Card ── */
   .service-card {
-    padding: var(--space-8);
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);
+    overflow: hidden;
     transition:
       border-color 300ms var(--ease-out-quart),
       background-color 300ms var(--ease-out-quart);
@@ -185,16 +168,25 @@
     background-color: var(--color-surface-raised);
   }
 
-  .service-icon {
-    width: 40px;
-    height: 40px;
-    color: var(--color-brand);
-    margin-bottom: var(--space-6);
+  .service-card:hover .service-image img {
+    transform: scale(1.05);
   }
 
-  .service-icon svg {
+  .service-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .service-image img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    transition: transform 500ms var(--ease-out-quart);
+  }
+
+  .service-body {
+    padding: var(--space-6) var(--space-6) var(--space-8);
   }
 
   .service-title {
@@ -208,12 +200,5 @@
     line-height: var(--leading-relaxed);
     color: var(--color-text-secondary);
     margin: 0;
-  }
-
-  /* ── Mobile ── */
-  @media (max-width: 639px) {
-    .service-card {
-      padding: var(--space-6);
-    }
   }
 </style>

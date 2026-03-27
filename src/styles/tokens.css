@@ -5,8 +5,8 @@
 
 :root {
   /* ── Typography ── */
-  --font-heading: 'Monument Extended', 'Arial Black', sans-serif;
-  --font-body: 'Sohne', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Outfit', 'Arial Black', sans-serif;
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 
   /* ── Type Scale (Perfect Fifth 1.5 from 18px) ── */
   --text-xs: 0.75rem;      /* 12px — captions, fine print */

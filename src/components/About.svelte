@@ -72,6 +72,14 @@
             your property like it's ours.
           </p>
         </div>
+
+        <div class="about-image">
+          <img
+            src="/media/general/Suburban_home_with_202603271712.jpeg"
+            alt="Well-maintained Edmonton property with landscaping"
+            loading="lazy"
+          />
+        </div>
       </div>
 
       <div class="about-values">
@@ -124,6 +132,19 @@
 
   .about-title {
     margin: 0;
+  }
+
+  /* ── Image ── */
+  .about-image {
+    margin-top: var(--space-10);
+    overflow: hidden;
+  }
+
+  .about-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16 / 10;
   }
 
   /* ── Story ── */

@@ -78,6 +78,20 @@
   id="hero"
   aria-label="North Edge Outdoor — Year-Round Property Services"
 >
+  <div class="hero-media" aria-hidden="true">
+    <video
+      class="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      poster="/media/hero/An_ultra-high-resolution,_cinematic_202603271652.png"
+    >
+      <source src="/media/hero/Lawn_care_on_202603271642.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+  </div>
+
   <FlowingPaths />
 
   <div class="hero-content">
@@ -117,6 +131,39 @@
     justify-content: center;
     overflow: hidden;
     background-color: var(--color-bg);
+  }
+
+  /* ── Video background ── */
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(250, 250, 248, 0.82) 0%,
+      rgba(250, 250, 248, 0.7) 50%,
+      rgba(250, 250, 248, 0.88) 100%
+    );
+  }
+
+  :global(.dark) .hero-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(10, 15, 13, 0.82) 0%,
+      rgba(10, 15, 13, 0.7) 50%,
+      rgba(10, 15, 13, 0.88) 100%
+    );
   }
 
   .hero-content {

@@ -100,8 +100,26 @@ All 3 sessions done. The hero experience is functional with Nav + Hero + Flowing
 ### Full Single-Page Layout Complete ✓
 All page sections built: Nav → Hero → Services → WhyUs → Pricing → About → Contact → Footer
 
-### Next: Polish & Deploy
-- Add real form backend (Formspree, Netlify Forms, etc.)
-- Add real images/media to public/media/
-- Performance audit & SEO pass
-- Deploy
+## Session 6: Fonts + Images + SEO (2026-03-27)
+
+### Completed
+- [x] Initialized git repo, pushed to `github.com/angularbrackets-web/north-edge-outdoor`
+- [x] Replaced Monument Extended + Söhne with free fonts: **Outfit** (headings) + **Inter** (body), self-hosted woff2
+- [x] Updated `tokens.css`, `global.css`, `Layout.astro` font references and preloads
+- [x] Added hero video background (`mp4`) with poster image (`png`), light/dark overlay
+- [x] Added service card images (lawn care, landscaping, snow removal, seasonal cleanup) with hover zoom
+- [x] Added property image to About section
+- [x] Added OG + Twitter meta tags to `Layout.astro`
+- [x] Visual QA passed: desktop, mobile, dark mode — all clean
+- [x] `pnpm build` — passes clean (1.24s, 1 page)
+
+### Decisions Made
+- **Outfit for headings**: Geometric, clean, slightly extended — good free replacement for Monument Extended
+- **Inter for body**: Industry-standard free alternative to Söhne
+- **Hero video overlay**: Semi-transparent gradient (light/dark aware) keeps text readable over video
+- **Service cards**: Switched from SVG icons to photo cards with 4:3 aspect ratio images
+
+### Next: Deploy & Form
+- Add real form backend (Formspree or similar)
+- Deploy to Vercel
+- Performance audit

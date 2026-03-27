@@ -9,32 +9,32 @@
 /* ── Font Faces ── */
 
 @font-face {
-  font-family: 'Monument Extended';
-  src: url('/fonts/MonumentExtended-SemiBold.woff2') format('woff2');
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Monument Extended';
-  src: url('/fonts/MonumentExtended-Bold.woff2') format('woff2');
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Sohne';
-  src: url('/fonts/Sohne-Regular.woff2') format('woff2');
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Sohne';
-  src: url('/fonts/Sohne-Medium.woff2') format('woff2');
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -43,8 +43,8 @@
 /* ── Theme Extension ── */
 
 @theme {
-  --font-heading: 'Monument Extended', 'Arial Black', sans-serif;
-  --font-body: 'Sohne', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Outfit', 'Arial Black', sans-serif;
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 
   --text-xs: var(--text-xs);
   --text-sm: var(--text-sm);
