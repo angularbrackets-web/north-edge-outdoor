@@ -1,0 +1,214 @@
+/* ============================================
+   North Edge Outdoor — Global Styles
+   Tailwind v4 CSS-native configuration
+   ============================================ */
+
+@import './tokens.css';
+@import "tailwindcss";
+
+/* ── Font Faces ── */
+
+@font-face {
+  font-family: 'Monument Extended';
+  src: url('/fonts/MonumentExtended-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Monument Extended';
+  src: url('/fonts/MonumentExtended-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sohne';
+  src: url('/fonts/Sohne-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sohne';
+  src: url('/fonts/Sohne-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Theme Extension ── */
+
+@theme {
+  --font-heading: 'Monument Extended', 'Arial Black', sans-serif;
+  --font-body: 'Sohne', 'Helvetica Neue', Arial, sans-serif;
+
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-md: var(--text-md);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --text-4xl: var(--text-4xl);
+  --text-5xl: var(--text-5xl);
+
+  --color-bg: var(--color-bg);
+  --color-bg-subtle: var(--color-bg-subtle);
+  --color-surface: var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-text: var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-brand: var(--color-brand);
+  --color-brand-hover: var(--color-brand-hover);
+  --color-brand-muted: var(--color-brand-muted);
+  --color-brand-text: var(--color-brand-text);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-info: var(--color-info);
+  --color-overlay: var(--color-overlay);
+  --color-overlay-subtle: var(--color-overlay-subtle);
+
+  --max-w-content: var(--max-w-content);
+  --max-w-wide: var(--max-w-wide);
+  --max-w-reading: var(--max-w-reading);
+  --max-w-narrow: var(--max-w-narrow);
+
+  --ease-out-expo: var(--ease-out-expo);
+  --ease-out-quart: var(--ease-out-quart);
+  --ease-in-out-quart: var(--ease-in-out-quart);
+}
+
+/* ── Dark mode variant ── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Theme transition (only during intentional toggle) ── */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 0.3s ease, color 0.3s ease,
+              border-color 0.3s ease, fill 0.3s ease,
+              stroke 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* ── Base Styles ── */
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    line-height: var(--leading-subheading);
+    letter-spacing: var(--tracking-snug);
+  }
+
+  p {
+    max-width: var(--max-w-reading);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 4px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-muted);
+    color: var(--color-text);
+  }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    h1 { font-size: 2.25rem; }
+    h2 { font-size: var(--text-lg); }
+  }
+}
+
+/* ── Utility Classes ── */
+
+@layer components {
+  .container {
+    width: 100%;
+    max-width: var(--max-w-content);
+    margin-inline: auto;
+    padding-inline: var(--container-padding-mobile);
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      padding-inline: var(--container-padding);
+    }
+  }
+
+  .section {
+    padding-block: var(--space-24);
+  }
+
+  @media (min-width: 768px) {
+    .section {
+      padding-block: var(--space-32);
+    }
+  }
+}

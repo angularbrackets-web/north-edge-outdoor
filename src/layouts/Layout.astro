@@ -1,0 +1,53 @@
+---
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Year-round property services in Edmonton. Professional lawn care, landscaping, and snow removal. One company, no gaps, no excuses.',
+} = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preload" href="/fonts/MonumentExtended-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Sohne-Regular.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta name="theme-color" content="#FAFAF8" />
+
+    <title>{title}</title>
+
+    <!-- Theme blocking script — prevents flash of wrong theme -->
+    <script is:inline>
+      (function() {
+        const stored = localStorage.getItem('neo-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored === 'dark' || stored === 'light' ? stored : (prefersDark ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#0a0f0d');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      import { initLenis } from '@/lib/lenis';
+      initLenis();
+    </script>
+  </body>
+</html>

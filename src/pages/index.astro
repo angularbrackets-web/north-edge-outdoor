@@ -1,0 +1,22 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.svelte';
+import Hero from '@/components/Hero.svelte';
+import Services from '@/components/Services.svelte';
+import WhyUs from '@/components/WhyUs.svelte';
+import Pricing from '@/components/Pricing.svelte';
+import About from '@/components/About.svelte';
+import Contact from '@/components/Contact.svelte';
+import Footer from '@/components/Footer.svelte';
+---
+
+<Layout title="North Edge Outdoor — Year-Round Property Services">
+  <Nav client:load />
+  <Hero client:load />
+  <Services client:visible />
+  <WhyUs client:visible />
+  <Pricing client:visible />
+  <About client:visible />
+  <Contact client:visible />
+  <Footer />
+</Layout>
