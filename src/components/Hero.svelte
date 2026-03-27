@@ -166,10 +166,10 @@
 
   /* ── Glass card ── */
   .hero-card {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 1rem;
     padding: var(--space-10) var(--space-8);
     max-width: 640px;
@@ -177,8 +177,8 @@
   }
 
   :global(.dark) .hero-card {
-    background: rgba(10, 15, 13, 0.6);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(10, 15, 13, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
