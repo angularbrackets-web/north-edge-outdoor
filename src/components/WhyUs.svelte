@@ -1,44 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import BackgroundSelector from '@/backgrounds/BackgroundSelector.svelte';
+  import { content } from '@/config/content';
 
   let sectionRef: HTMLElement;
   let headingRef: HTMLElement;
   let items: HTMLElement[] = [];
   let statItems: HTMLElement[] = [];
 
-  const reasons = [
-    {
-      number: '01',
-      title: 'One Company, Every Season',
-      description:
-        'No juggling contractors. Lawn care in summer, snow removal in winter — one team, one invoice, zero gaps between seasons.',
-    },
-    {
-      number: '02',
-      title: '24-Hour Snow Response',
-      description:
-        'When the storm hits at 3 AM, we\'re already deploying. Commercial and residential properties cleared before your morning starts.',
-    },
-    {
-      number: '03',
-      title: 'Edmonton-Built',
-      description:
-        'We don\'t guess at what works here — we live it. Our methods, equipment, and timing are built for Alberta\'s extremes.',
-    },
-    {
-      number: '04',
-      title: 'No Contracts Required',
-      description:
-        'We earn your business every visit. Seasonal packages available, but you\'re never locked in. Stay because the work speaks.',
-    },
-  ];
-
-  const stats = [
-    { value: '8+', label: 'Years in Edmonton' },
-    { value: '500+', label: 'Properties Served' },
-    { value: '24hr', label: 'Snow Response' },
-    { value: '4.9', label: 'Google Rating' },
-  ];
+  const { reasons, stats } = content.whyUs;
 
   onMount(() => {
     let ctx: any;
@@ -61,10 +31,11 @@
   class="why-us section"
   aria-label="Why Choose North Edge"
 >
+  <BackgroundSelector section="whyUs" />
   <div class="container">
     <div class="why-us-header" bind:this={headingRef}>
-      <span class="why-us-label">Why North Edge</span>
-      <h2 class="why-us-title">The Difference<br />Is in the Details</h2>
+      <span class="why-us-label">{content.whyUs.label}</span>
+      <h2 class="why-us-title">{#each content.whyUs.title.split('\n') as line, i}{#if i > 0}<br />{/if}{line}{/each}</h2>
     </div>
 
     <div class="why-us-grid">
@@ -128,6 +99,11 @@
   .reason {
     padding: var(--space-8);
     border-bottom: 1px solid var(--color-border);
+    transition: background-color var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .reason:hover {
+    background-color: var(--color-brand-muted);
   }
 
   @media (min-width: 768px) {
@@ -162,12 +138,22 @@
     color: var(--color-brand);
     letter-spacing: var(--tracking-wide);
     margin-bottom: var(--space-4);
+    transition: transform var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .reason:hover .reason-number {
+    transform: translateX(6px) scale(1.15);
   }
 
   .reason-title {
     font-size: var(--text-base);
     letter-spacing: var(--tracking-snug);
     margin: 0 0 var(--space-3) 0;
+    transition: color var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .reason:hover .reason-title {
+    color: var(--color-brand);
   }
 
   .reason-description {
@@ -197,6 +183,12 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+    cursor: default;
+    transition: transform var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .stat:hover {
+    transform: scale(1.08);
   }
 
   .stat-value {
@@ -206,6 +198,11 @@
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
     text-transform: uppercase;
+    transition: color var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .stat:hover .stat-value {
+    color: var(--color-brand);
   }
 
   .stat-label {

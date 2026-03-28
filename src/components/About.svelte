@@ -1,38 +1,119 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import BackgroundSelector from '@/backgrounds/BackgroundSelector.svelte';
+  import { siteConfig } from '@/config/site';
+  import { content } from '@/config/content';
 
   let sectionRef: HTMLElement;
   let headingRef: HTMLElement;
-  let storyRef: HTMLElement;
+  let storyParagraphs: HTMLElement[] = [];
+  let imageRef: HTMLElement;
+  let statementRef: HTMLElement;
+  let accentRef: HTMLElement;
+  let pullQuoteRef: HTMLElement;
+  let proofItems: HTMLElement[] = [];
+  let valuesRef: HTMLElement;
   let values: HTMLElement[] = [];
 
-  const coreValues = [
-    {
-      title: 'Show Up',
-      description: 'Every visit, on time, no excuses. Your property doesn\'t wait for the weekend — neither do we.',
-    },
-    {
-      title: 'Do It Right',
-      description: 'Clean edges, straight lines, clear walks. We take pride in work that speaks before we do.',
-    },
-    {
-      title: 'Think Ahead',
-      description: 'We prepare your property for next season while servicing this one. No gaps, no scramble.',
-    },
-    {
-      title: 'Stay Local',
-      description: 'Edmonton-owned, Edmonton-operated. We live on the same streets we service.',
-    },
-  ];
+  const { values: coreValues, stats, story, pullQuote, image: aboutImage, imageAlt } = content.about;
 
   onMount(() => {
     let ctx: any;
 
     import('@/lib/animations').then(({ scrollReveal, gsap }) => {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       ctx = gsap.context(() => {
+        // ── Header ──
         scrollReveal(headingRef, sectionRef, { y: 40 });
-        scrollReveal(storyRef, sectionRef, { y: 30, delay: 0.1 });
-        scrollReveal(values, sectionRef, { y: 40, stagger: 0.08, delay: 0.2 });
+
+        // ── Story paragraphs ──
+        scrollReveal(storyParagraphs, sectionRef, { y: 30, stagger: 0.1, delay: 0.1 });
+
+        // ── Image clip-path reveal ──
+        if (!prefersReduced) {
+          gsap.set(imageRef, {
+            clipPath: 'inset(12% 12% 12% 12%)',
+            scale: 1.08,
+          });
+          gsap.to(imageRef, {
+            clipPath: 'inset(0% 0% 0% 0%)',
+            scale: 1,
+            duration: 1.4,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: imageRef,
+              start: 'top 80%',
+            },
+          });
+        }
+
+        // ── Statement accent line ──
+        if (!prefersReduced) {
+          gsap.set(accentRef, { scaleY: 0, transformOrigin: 'top center' });
+          gsap.to(accentRef, {
+            scaleY: 1,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: statementRef,
+              start: 'top 80%',
+            },
+          });
+        }
+
+        // ── Pull quote ──
+        scrollReveal(pullQuoteRef, statementRef, { y: 40, delay: 0.1 });
+
+        // ── Proof stats reveal ──
+        scrollReveal(proofItems, statementRef, { y: 25, stagger: 0.1, delay: 0.2 });
+
+        // ── Counter animations ──
+        if (!prefersReduced) {
+          proofItems.forEach((item, i) => {
+            const valueEl = item.querySelector('.proof-value');
+            if (!valueEl) return;
+            const target = parseFloat(valueEl.getAttribute('data-value') || '0');
+            const isDecimal = valueEl.getAttribute('data-decimal') === 'true';
+            const suffix = valueEl.getAttribute('data-suffix') || '';
+
+            valueEl.textContent = '0' + suffix;
+
+            const counter = { val: 0 };
+            gsap.to(counter, {
+              val: target,
+              duration: 2,
+              ease: 'power2.out',
+              delay: 0.4 + i * 0.15,
+              scrollTrigger: {
+                trigger: statementRef,
+                start: 'top 80%',
+              },
+              onUpdate() {
+                valueEl.textContent = (isDecimal ? counter.val.toFixed(1) : Math.round(counter.val).toString()) + suffix;
+              },
+            });
+          });
+        }
+
+        // ── Values reveal with accent lines ──
+        values.forEach((val, i) => {
+          const line = val.querySelector('.value-accent');
+          scrollReveal(val, valuesRef, { y: 35, delay: i * 0.08 });
+          if (line && !prefersReduced) {
+            gsap.set(line, { scaleX: 0, transformOrigin: 'left center' });
+            gsap.to(line, {
+              scaleX: 1,
+              duration: 0.8,
+              ease: 'power3.out',
+              delay: i * 0.08 + 0.4,
+              scrollTrigger: {
+                trigger: valuesRef,
+                start: 'top 85%',
+              },
+            });
+          }
+        });
       }, sectionRef);
     });
 
@@ -44,53 +125,64 @@
   bind:this={sectionRef}
   id="about"
   class="about section"
-  aria-label="About North Edge"
+  aria-label="About {siteConfig.business.name}"
 >
+  <BackgroundSelector section="about" />
   <div class="container">
-    <div class="about-layout">
-      <div class="about-content">
-        <div bind:this={headingRef} class="about-header">
-          <span class="about-label">About Us</span>
-          <h2 class="about-title">Built for<br />Edmonton</h2>
-        </div>
+    <div bind:this={headingRef} class="about-header">
+      <span class="about-label">{content.about.label}</span>
+      <h2 class="about-title">{#each content.about.title.split('\n') as line, i}{#if i > 0}<br />{/if}{line}{/each}</h2>
+    </div>
 
-        <div bind:this={storyRef} class="about-story">
-          <p>
-            North Edge started with a truck, a mower, and the simple belief that property
-            care shouldn't be complicated. Eight years later, we service over 500
-            residential and commercial properties across Edmonton and surrounding areas.
-          </p>
-          <p>
-            We built this company for Alberta's extremes — the long winters, the short
-            growing seasons, the storms that don't check the forecast. One team handles
-            your property year-round so you never have to coordinate between contractors
-            or wonder who's showing up next.
-          </p>
-          <p>
-            Every crew member lives locally, knows the climate, and takes ownership of
-            the properties they maintain. That's the North Edge difference — we treat
-            your property like it's ours.
-          </p>
-        </div>
-
-        <div class="about-image">
-          <img
-            src="/media/general/Suburban_home_with_202603271712.jpeg"
-            alt="Well-maintained Edmonton property with landscaping"
-            loading="lazy"
-          />
-        </div>
+    <div class="about-top">
+      <div class="about-story">
+        {#each story as paragraph, i}
+          <p bind:this={storyParagraphs[i]} class:lead={i === 0}>{paragraph}</p>
+        {/each}
       </div>
 
-      <div class="about-values">
-        {#each coreValues as value, i}
-          <div class="value" bind:this={values[i]}>
-            <span class="value-number">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="value-title">{value.title}</h3>
-            <p class="value-description">{value.description}</p>
+      <div bind:this={imageRef} class="about-image">
+        <img
+          src={aboutImage}
+          alt={imageAlt}
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div bind:this={statementRef} class="about-statement">
+      <div bind:this={accentRef} class="statement-accent" aria-hidden="true"></div>
+      <blockquote bind:this={pullQuoteRef} class="about-pullquote">
+        {pullQuote}
+      </blockquote>
+      <div class="statement-proof">
+        {#each stats as stat, i}
+          <div class="proof-stat" bind:this={proofItems[i]}>
+            <span
+              class="proof-value"
+              data-value={stat.value}
+              data-suffix={stat.suffix}
+              data-decimal={stat.decimal}
+            >
+              {stat.value}{stat.suffix}
+            </span>
+            <span class="proof-label">{stat.label}</span>
           </div>
         {/each}
       </div>
+    </div>
+
+    <div bind:this={valuesRef} class="about-values">
+      {#each coreValues as value, i}
+        <div class="value" bind:this={values[i]}>
+          <span class="value-number">{String(i + 1).padStart(2, '0')}</span>
+          <div class="value-accent" aria-hidden="true"></div>
+          <div class="value-content">
+            <h3 class="value-title">{value.title}</h3>
+            <p class="value-description">{value.description}</p>
+          </div>
+        </div>
+      {/each}
     </div>
   </div>
 </section>
@@ -101,22 +193,9 @@
     position: relative;
   }
 
-  .about-layout {
-    display: grid;
-    gap: var(--space-16);
-  }
-
-  @media (min-width: 1024px) {
-    .about-layout {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-24);
-      align-items: start;
-    }
-  }
-
   /* ── Header ── */
   .about-header {
-    margin-bottom: var(--space-10);
+    margin-bottom: var(--space-16);
   }
 
   .about-label {
@@ -134,17 +213,18 @@
     margin: 0;
   }
 
-  /* ── Image ── */
-  .about-image {
-    margin-top: var(--space-10);
-    overflow: hidden;
+  /* ── Top: Story + Image ── */
+  .about-top {
+    display: grid;
+    gap: var(--space-10);
   }
 
-  .about-image img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    aspect-ratio: 16 / 10;
+  @media (min-width: 1024px) {
+    .about-top {
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-16);
+      align-items: start;
+    }
   }
 
   /* ── Story ── */
@@ -161,46 +241,158 @@
     margin: 0;
   }
 
-  .about-story p:first-child {
+  .about-story .lead {
     font-size: var(--text-md);
     color: var(--color-text);
   }
 
-  /* ── Values ── */
-  .about-values {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  /* ── Image ── */
+  .about-image {
+    overflow: hidden;
+  }
+
+  .about-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 4 / 5;
+  }
+
+  /* ── Statement: Quote + Proof ── */
+  .about-statement {
+    position: relative;
+    margin: var(--space-20) 0;
+    padding-left: var(--space-10);
+  }
+
+  .statement-accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--color-brand);
+  }
+
+  .about-pullquote {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-heading);
+    color: var(--color-text);
+    margin: 0 0 var(--space-10) 0;
+    padding: 0;
+    border: none;
+    max-width: 20ch;
+  }
+
+  .statement-proof {
+    display: flex;
+    gap: var(--space-10);
+  }
+
+  .proof-stat {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
+  .proof-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tighter);
+    color: var(--color-brand);
+    line-height: 1;
+  }
+
+  .proof-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 768px) {
+    .about-statement {
+      padding-left: var(--space-16);
+    }
+
+    .about-pullquote {
+      font-size: var(--text-2xl);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .about-pullquote {
+      font-size: var(--text-3xl);
+    }
+
+    .proof-value {
+      font-size: var(--text-3xl);
+    }
+  }
+
+  /* ── Values ── */
+  .about-values {
+    display: flex;
+    flex-direction: column;
+  }
+
   .value {
-    padding: var(--space-6);
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: start;
+    gap: var(--space-6);
+    padding: var(--space-8) 0;
     border-bottom: 1px solid var(--color-border);
   }
 
-  .value:nth-child(even) {
-    border-left: 1px solid var(--color-border);
-    padding-left: var(--space-8);
-  }
-
-  .value:nth-last-child(-n+2) {
+  .value:last-child {
     border-bottom: none;
   }
 
   .value-number {
-    display: block;
-    font-family: var(--font-body);
-    font-size: var(--text-xs);
-    font-weight: 500;
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
     color: var(--color-brand);
-    letter-spacing: var(--tracking-wide);
-    margin-bottom: var(--space-3);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+    padding-top: 0.15em;
+    transition: transform var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .value:hover .value-number {
+    transform: scale(1.15);
+  }
+
+  .value-accent {
+    width: 40px;
+    height: 2px;
+    background-color: var(--color-brand);
+    margin-top: 0.65em;
+    flex-shrink: 0;
+  }
+
+  .value-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
   .value-title {
-    font-size: var(--text-sm);
-    letter-spacing: var(--tracking-wide);
-    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-base);
+    letter-spacing: var(--tracking-snug);
+    margin: 0;
+    transition: color var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .value:hover .value-title {
+    color: var(--color-brand);
   }
 
   .value-description {
@@ -208,29 +400,35 @@
     line-height: var(--leading-relaxed);
     color: var(--color-text-secondary);
     margin: 0;
+    max-width: var(--max-w-reading);
   }
 
   /* ── Mobile ── */
   @media (max-width: 639px) {
-    .about-values {
-      grid-template-columns: 1fr;
+    .about-statement {
+      padding-left: var(--space-8);
+    }
+
+    .statement-proof {
+      gap: var(--space-6);
+    }
+
+    .proof-value {
+      font-size: var(--text-xl);
     }
 
     .value {
-      padding: var(--space-5) 0;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-4);
+      padding: var(--space-6) 0;
     }
 
-    .value:nth-child(even) {
-      border-left: none;
-      padding-left: 0;
+    .value-accent {
+      display: none;
     }
 
-    .value:last-child {
-      border-bottom: none;
-    }
-
-    .value:nth-last-child(2) {
-      border-bottom: 1px solid var(--color-border);
+    .value-number {
+      font-size: var(--text-md);
     }
   }
 </style>

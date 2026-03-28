@@ -1,61 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import BackgroundSelector from '@/backgrounds/BackgroundSelector.svelte';
+  import { content } from '@/config/content';
+  import { packages as plans } from '@/lib/packages';
 
   let sectionRef: HTMLElement;
   let headingRef: HTMLElement;
-  let subRef: HTMLElement;
   let cards: HTMLElement[] = [];
   let noteRef: HTMLElement;
-
-  const plans = [
-    {
-      name: 'Lawn Care',
-      price: '149',
-      period: '/month',
-      description: 'Reliable weekly service to keep your lawn clean and green all season.',
-      features: [
-        'Weekly mowing & edging',
-        'Bi-weekly trimming',
-        'Spring & fall cleanup',
-        'Fertilization (2x/year)',
-        'Leaf removal',
-      ],
-      cta: 'Get Started',
-      featured: false,
-    },
-    {
-      name: 'Year-Round',
-      price: '299',
-      period: '/month',
-      description: 'One contract, every season — lawn care in summer, snow removal in winter.',
-      features: [
-        'Everything in Lawn Care',
-        'Snow plowing & sanding',
-        'Sidewalk clearing',
-        '24-hour storm response',
-        'Seasonal transition service',
-        'Priority scheduling',
-      ],
-      cta: 'Best Value',
-      featured: true,
-    },
-    {
-      name: 'Commercial',
-      price: 'Custom',
-      period: '',
-      description: 'Tailored property management for businesses, complexes, and HOAs.',
-      features: [
-        'Custom maintenance plans',
-        'Multi-property discounts',
-        'Dedicated account manager',
-        '24/7 emergency snow response',
-        'Liability insurance included',
-        'Monthly reporting',
-      ],
-      cta: 'Get a Quote',
-      featured: false,
-    },
-  ];
 
   onMount(() => {
     let ctx: any;
@@ -63,7 +15,6 @@
     import('@/lib/animations').then(({ scrollReveal, gsap }) => {
       ctx = gsap.context(() => {
         scrollReveal(headingRef, sectionRef, { y: 40 });
-        scrollReveal(subRef, sectionRef, { y: 30, delay: 0.1 });
         scrollReveal(cards, sectionRef, { y: 50, stagger: 0.1, delay: 0.15 });
         scrollReveal(noteRef, sectionRef, { y: 20, delay: 0.4 });
       }, sectionRef);
@@ -79,16 +30,12 @@
   class="pricing section"
   aria-label="Pricing"
 >
+  <BackgroundSelector section="pricing" />
   <div class="container">
     <div class="pricing-header">
       <span bind:this={headingRef} class="pricing-heading-group">
-        <span class="pricing-label">Pricing</span>
-        <h2 class="pricing-title">Simple,<br />Honest Rates</h2>
+        <h2 class="pricing-title">{content.pricing.title}</h2>
       </span>
-      <p bind:this={subRef} class="pricing-sub">
-        No hidden fees, no surprise charges. Pick the plan that fits your
-        property — upgrade or cancel anytime.
-      </p>
     </div>
 
     <div class="pricing-grid">
@@ -104,6 +51,7 @@
           <div class="pricing-card-header">
             <h3 class="plan-name">{plan.name}</h3>
             <div class="plan-price">
+              <span class="plan-currency">$</span>
               <span class="plan-amount">{plan.price}</span>
               {#if plan.period}
                 <span class="plan-period">{plan.period}</span>
@@ -133,7 +81,7 @@
     </div>
 
     <p bind:this={noteRef} class="pricing-note">
-      All residential prices based on standard lot sizes. Final pricing confirmed after property assessment.
+      {content.pricing.note}
     </p>
   </div>
 </section>
@@ -145,42 +93,18 @@
   }
 
   .pricing-header {
-    display: grid;
-    gap: var(--space-6);
+    text-align: center;
     margin-bottom: var(--space-16);
   }
 
-  @media (min-width: 768px) {
-    .pricing-header {
-      grid-template-columns: 1fr 1fr;
-      align-items: end;
-      gap: var(--space-12);
-    }
-  }
-
   .pricing-heading-group {
-    display: block;
-  }
-
-  .pricing-label {
-    display: block;
-    font-family: var(--font-body);
-    font-size: var(--text-xs);
-    font-weight: 500;
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-brand);
-    margin-bottom: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
   }
 
   .pricing-title {
-    margin: 0;
-  }
-
-  .pricing-sub {
-    font-size: var(--text-md);
-    line-height: var(--leading-body);
-    color: var(--color-text-secondary);
     margin: 0;
   }
 
@@ -192,8 +116,14 @@
 
   @media (min-width: 768px) {
     .pricing-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       align-items: start;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pricing-grid {
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
@@ -205,13 +135,22 @@
     padding: var(--space-8);
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 10px 30px rgba(0, 0, 0, 0.18);
     transition:
-      border-color 300ms var(--ease-out-quart),
-      background-color 300ms var(--ease-out-quart);
+      border-color var(--duration-normal) var(--ease-out-quart),
+      background-color var(--duration-normal) var(--ease-out-quart),
+      transform var(--duration-normal) var(--ease-out-quart),
+      box-shadow var(--duration-normal) var(--ease-out-quart);
   }
 
   .pricing-card:hover {
     border-color: var(--color-brand);
+    transform: translateY(-10px) scale(1.03);
+    box-shadow:
+      0 8px 16px rgba(0, 0, 0, 0.14),
+      0 32px 56px rgba(0, 0, 0, 0.22);
   }
 
   .pricing-card--featured {
@@ -253,13 +192,28 @@
     margin-bottom: var(--space-3);
   }
 
+  .plan-currency {
+    font-family: var(--font-heading);
+    font-size: var(--text-md);
+    font-weight: 600;
+    color: var(--color-brand);
+  }
+
   .plan-amount {
     font-family: var(--font-heading);
     font-size: var(--text-xl);
     font-weight: 700;
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
-    text-transform: uppercase;
+    display: inline-block;
+    transition:
+      transform var(--duration-normal) var(--ease-out-quart),
+      color var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .pricing-card:hover .plan-amount {
+    transform: scale(1.12);
+    color: var(--color-brand);
   }
 
   .plan-period {
@@ -301,6 +255,11 @@
     flex-shrink: 0;
     color: var(--color-brand);
     margin-top: 2px;
+    transition: transform var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .pricing-card:hover .check-icon {
+    transform: scale(1.3);
   }
 
   /* ── CTA ── */
@@ -317,14 +276,19 @@
     color: var(--color-text);
     background-color: transparent;
     transition:
-      background-color 200ms var(--ease-out-quart),
-      border-color 200ms var(--ease-out-quart),
-      color 200ms var(--ease-out-quart);
+      background-color var(--duration-normal) var(--ease-out-quart),
+      border-color var(--duration-normal) var(--ease-out-quart),
+      color var(--duration-normal) var(--ease-out-quart),
+      transform var(--duration-normal) var(--ease-out-quart),
+      box-shadow var(--duration-normal) var(--ease-out-quart);
   }
 
   .plan-cta:hover {
     border-color: var(--color-brand);
-    color: var(--color-brand);
+    background-color: var(--color-brand);
+    color: var(--color-brand-text);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   }
 
   .plan-cta--featured {

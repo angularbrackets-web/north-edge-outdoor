@@ -1,5 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import BackgroundSelector from '@/backgrounds/BackgroundSelector.svelte';
+  import { siteConfig } from '@/config/site';
+  import { content } from '@/config/content';
 
   let sectionRef: HTMLElement;
   let headingRef: HTMLElement;
@@ -7,28 +10,48 @@
   let infoRef: HTMLElement;
 
   let formState: 'idle' | 'submitting' | 'success' | 'error' = $state('idle');
+  let errorMessage = $state('');
 
-  const phoneNumber = '780-680-2936';
+  const phoneNumber = siteConfig.business.phone;
   const phoneHref = `tel:+1${phoneNumber.replace(/-/g, '')}`;
-  const email = 'info@northedgeoutdoor.ca';
+  const email = siteConfig.business.email;
 
-  const serviceOptions = [
-    'Lawn Care',
-    'Landscaping',
-    'Snow Removal',
-    'Seasonal Package',
-    'Commercial Services',
-    'Other',
-  ];
+  const { propertySizes, serviceOptions } = content.contact;
 
-  function handleSubmit(e: SubmitEvent) {
+  async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     formState = 'submitting';
+    errorMessage = '';
 
-    // Simulate form submission — replace with real endpoint
-    setTimeout(() => {
+    const form = e.target as HTMLFormElement;
+    const data = new FormData(form);
+
+    const payload = {
+      name: data.get('name') as string,
+      email: data.get('email') as string,
+      phone: data.get('phone') as string || undefined,
+      service: data.get('service') as string,
+      message: data.get('message') as string || undefined,
+      _hp: data.get('_hp') as string || undefined, // honeypot
+    };
+
+    try {
+      const res = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || 'Something went wrong. Please try again.');
+      }
+
       formState = 'success';
-    }, 1200);
+    } catch (err) {
+      formState = 'error';
+      errorMessage = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+    }
   }
 
   onMount(() => {
@@ -52,13 +75,13 @@
   class="contact section"
   aria-label="Contact Us"
 >
+  <BackgroundSelector section="contact" />
   <div class="container">
     <div bind:this={headingRef} class="contact-header">
-      <span class="contact-label">Get in Touch</span>
-      <h2 class="contact-title">Free<br />Estimate</h2>
+      <span class="contact-label">{content.contact.label}</span>
+      <h2 class="contact-title">{#each content.contact.title.split('\n') as line, i}{#if i > 0}<br />{/if}{line}{/each}</h2>
       <p class="contact-sub">
-        Tell us about your property and we'll get back to you within 24 hours
-        with a no-obligation quote.
+        {content.contact.subtitle}
       </p>
     </div>
 
@@ -70,13 +93,25 @@
               <circle cx="16" cy="16" r="12"/>
               <path d="M11 16.5l3.5 3.5 7-8"/>
             </svg>
-            <h3 class="success-title">Message Sent</h3>
+            <h3 class="success-title">{content.contact.successMessage.title}</h3>
             <p class="success-text">
-              Thanks for reaching out. We'll get back to you within 24 hours.
+              {content.contact.successMessage.text}
             </p>
           </div>
         {:else}
           <form onsubmit={handleSubmit} class="contact-form">
+            {#if formState === 'error'}
+              <div class="form-error" role="alert">
+                {errorMessage}
+              </div>
+            {/if}
+
+            <!-- Honeypot: hidden from humans, bots fill it -->
+            <div aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden;">
+              <label for="_hp">Leave empty</label>
+              <input type="text" id="_hp" name="_hp" tabindex="-1" autocomplete="off" />
+            </div>
+
             <div class="form-row">
               <div class="form-field">
                 <label for="name" class="form-label">Name</label>
@@ -116,14 +151,26 @@
               />
             </div>
 
-            <div class="form-field">
-              <label for="service" class="form-label">Service Interested In</label>
-              <select id="service" name="service" class="form-input form-select">
-                <option value="" disabled selected>Select a service</option>
-                {#each serviceOptions as option}
-                  <option value={option}>{option}</option>
-                {/each}
-              </select>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="service" class="form-label">Service Interested In</label>
+                <select id="service" name="service" class="form-input form-select">
+                  <option value="" disabled selected>Select a service</option>
+                  {#each serviceOptions as option}
+                    <option value={option}>{option}</option>
+                  {/each}
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="property-size" class="form-label">Property Size</label>
+                <select id="property-size" name="property-size" class="form-input form-select">
+                  <option value="" disabled selected>Select property size</option>
+                  {#each propertySizes as size}
+                    <option value={size}>{size}</option>
+                  {/each}
+                </select>
+              </div>
             </div>
 
             <div class="form-field">
@@ -161,18 +208,15 @@
 
         <div class="info-block">
           <span class="info-label">Service Area</span>
-          <p class="info-text">
-            Edmonton, St. Albert, Sherwood Park,<br />
-            Spruce Grove, and surrounding areas
-          </p>
+          <p class="info-text">{siteConfig.business.serviceArea}</p>
         </div>
 
         <div class="info-block">
-          <span class="info-label">Hours</span>
+          <span class="info-label">Office Hours</span>
           <p class="info-text">
-            Monday – Friday: 7 AM – 6 PM<br />
-            Saturday: 8 AM – 4 PM<br />
-            Snow removal: 24/7
+            {#each siteConfig.business.officeHours as hours, i}
+              {#if i > 0}<br />{/if}{hours.days}: {hours.hours}
+            {/each}
           </p>
         </div>
       </div>
@@ -311,18 +355,38 @@
     border: 1px solid var(--color-brand);
     cursor: pointer;
     transition:
-      background-color 200ms var(--ease-out-quart),
-      border-color 200ms var(--ease-out-quart);
+      background-color var(--duration-normal) var(--ease-out-quart),
+      border-color var(--duration-normal) var(--ease-out-quart),
+      transform var(--duration-normal) var(--ease-out-quart),
+      box-shadow var(--duration-normal) var(--ease-out-quart);
   }
 
   .form-submit:hover:not(:disabled) {
     background-color: var(--color-brand-hover);
     border-color: var(--color-brand-hover);
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
   }
 
   .form-submit:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  /* ── Error ── */
+  .form-error {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+    color: #b91c1c;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 4px;
+  }
+
+  :global([data-theme='dark']) .form-error {
+    color: #fca5a5;
+    background-color: rgba(185, 28, 28, 0.15);
+    border-color: rgba(185, 28, 28, 0.3);
   }
 
   /* ── Success ── */
@@ -361,6 +425,9 @@
     padding: var(--space-8);
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 10px 30px rgba(0, 0, 0, 0.18);
   }
 
   .info-block {
@@ -386,22 +453,49 @@
     color: var(--color-brand);
     text-decoration: none;
     text-transform: uppercase;
-    transition: color 200ms var(--ease-out-quart);
+    display: inline-block;
+    transition:
+      color var(--duration-normal) var(--ease-out-quart),
+      transform var(--duration-normal) var(--ease-out-quart);
   }
 
   .info-phone:hover {
     color: var(--color-brand-hover);
+    transform: scale(1.08);
   }
 
   .info-link {
+    position: relative;
     font-size: var(--text-sm);
     color: var(--color-brand);
     text-decoration: none;
-    transition: color 200ms var(--ease-out-quart);
+    display: inline-block;
+    transition:
+      color var(--duration-normal) var(--ease-out-quart),
+      transform var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .info-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--color-brand-hover);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform var(--duration-normal) var(--ease-out-quart);
   }
 
   .info-link:hover {
     color: var(--color-brand-hover);
+    transform: translateX(4px);
+  }
+
+  .info-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left center;
   }
 
   .info-text {

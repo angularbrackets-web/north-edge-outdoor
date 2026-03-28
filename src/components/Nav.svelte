@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import ThemeToggle from './ThemeToggle.svelte';
+  import { siteConfig } from '@/config/site';
+  import { content } from '@/config/content';
 
   let scrolled = $state(false);
   let mobileOpen = $state(false);
@@ -23,21 +25,17 @@
     document.body.style.overflow = '';
   }
 
-  const navLinks = [
-    { label: 'Services', href: '#services' },
-    { label: 'Why Us', href: '#why-us' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'About', href: '#about' },
-    { label: 'Contact', href: '#contact' },
-  ];
+  const navLinks = content.nav.links;
 
-  const phoneNumber = '780-680-2936';
+  const phoneNumber = siteConfig.business.phone;
   const phoneHref = `tel:+1${phoneNumber.replace(/-/g, '')}`;
 </script>
 
 <header class="nav" class:scrolled>
   <nav class="nav-inner" aria-label="Main navigation">
-    <a href="/" class="nav-logo">North Edge</a>
+    <a href="/" class="nav-logo">
+      <img src={siteConfig.brand.logoPath} alt={siteConfig.brand.logoAlt} class="nav-logo-img" />
+    </a>
 
     <div class="nav-links" class:open={mobileOpen}>
       {#each navLinks as link}
@@ -102,17 +100,24 @@
   }
 
   .nav-logo {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--color-text);
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    letter-spacing: var(--tracking-tight);
-    text-transform: uppercase;
+    flex-shrink: 0;
   }
 
-  .nav-logo:hover {
-    color: var(--color-text);
+  .nav-logo-img {
+    height: 44px;
+    width: auto;
+    transition: transform 0.2s ease;
+  }
+
+  .nav.scrolled .nav-logo-img {
+    height: 36px;
+  }
+
+  .nav-logo:hover .nav-logo-img {
+    transform: scale(1.08);
   }
 
   .nav-links {
@@ -122,6 +127,7 @@
   }
 
   .nav-link {
+    position: relative;
     font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: 500;
@@ -129,11 +135,29 @@
     text-decoration: none;
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    transition: color 0.2s ease;
+    transition: color var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--color-brand);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform var(--duration-normal) var(--ease-out-quart);
   }
 
   .nav-link:hover {
     color: var(--color-text);
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left center;
   }
 
   .nav-cta {
@@ -150,11 +174,16 @@
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    transition:
+      background-color var(--duration-normal) var(--ease-out-quart),
+      transform var(--duration-normal) var(--ease-out-quart),
+      box-shadow var(--duration-normal) var(--ease-out-quart);
   }
 
   .nav-cta:hover {
     background-color: var(--color-brand-hover);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   }
 
   .nav-actions {
