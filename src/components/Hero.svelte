@@ -182,6 +182,10 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
+  :global(.dark) .hero-sub {
+    color: rgba(232, 228, 220, 0.85);
+  }
+
   @media (min-width: 768px) {
     .hero-card {
       padding: var(--space-12) var(--space-10);
