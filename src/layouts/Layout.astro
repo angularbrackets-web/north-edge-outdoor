@@ -1,5 +1,7 @@
 ---
 import '@/styles/global.css';
+import { siteConfig } from '@/config/site';
+import type { ColorPalette } from '@/config/site';
 
 interface Props {
   title: string;
@@ -8,9 +10,33 @@ interface Props {
 
 const {
   title,
-  description = 'Year-round property services in Edmonton. Professional lawn care, landscaping, and snow removal. One company, no gaps, no excuses.',
+  description = siteConfig.seo.defaultDescription,
 } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+function paletteToVars(p: ColorPalette): string {
+  return [
+    `--color-brand: ${p.brand}`,
+    `--color-brand-hover: ${p.brandHover}`,
+    `--color-brand-muted: ${p.brandMuted}`,
+    `--color-brand-text: ${p.brandText}`,
+    `--color-bg: ${p.bg}`,
+    `--color-bg-subtle: ${p.bgSubtle}`,
+    `--color-surface: ${p.surface}`,
+    `--color-surface-raised: ${p.surfaceRaised}`,
+    `--color-border: ${p.border}`,
+    `--color-border-strong: ${p.borderStrong}`,
+    `--color-text: ${p.text}`,
+    `--color-text-secondary: ${p.textSecondary}`,
+    `--color-text-muted: ${p.textMuted}`,
+    `--color-overlay: ${p.overlay}`,
+    `--color-overlay-subtle: ${p.overlaySubtle}`,
+    `--glass-bg: ${p.glassBg}`,
+    `--glass-border: ${p.glassBorder}`,
+  ].map(l => `  ${l};`).join('\n');
+}
+
+const configCSS = `:root {\n${paletteToVars(siteConfig.colors.light)}\n  --font-heading: '${siteConfig.fonts.heading.family}', ${siteConfig.fonts.heading.fallback};\n  --font-body: '${siteConfig.fonts.body.family}', ${siteConfig.fonts.body.fallback};\n}\n.dark {\n${paletteToVars(siteConfig.colors.dark)}\n}`;
 ---
 
 <!doctype html>
@@ -30,29 +56,32 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content={new URL('/media/hero/An_ultra-high-resolution,_cinematic_202603271652.png', Astro.site)} />
-    <meta property="og:locale" content="en_CA" />
-    <meta property="og:site_name" content="North Edge Outdoor" />
+    <meta property="og:image" content={new URL(siteConfig.seo.ogImagePath, Astro.site)} />
+    <meta property="og:locale" content={siteConfig.seo.locale} />
+    <meta property="og:site_name" content={siteConfig.business.name} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL('/media/hero/An_ultra-high-resolution,_cinematic_202603271652.png', Astro.site)} />
+    <meta name="twitter:image" content={new URL(siteConfig.seo.ogImagePath, Astro.site)} />
 
-    <meta name="theme-color" content="#FAFAF8" />
+    <meta name="theme-color" content={siteConfig.colors.light.bg} />
 
     <title>{title}</title>
 
+    <!-- Config-driven design tokens (overrides tokens.css defaults) -->
+    <style is:inline set:html={configCSS}></style>
+
     <!-- Theme blocking script — prevents flash of wrong theme -->
-    <script is:inline>
+    <script is:inline define:vars={{ darkBg: siteConfig.colors.dark.bg }}>
       (function() {
         const stored = localStorage.getItem('neo-theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = stored === 'dark' || stored === 'light' ? stored : (prefersDark ? 'dark' : 'light');
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');
-          document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#0a0f0d');
+          document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkBg);
         }
       })();
     </script>
