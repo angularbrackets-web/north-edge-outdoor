@@ -3,6 +3,31 @@
 
   let svgRef: SVGSVGElement;
 
+  const pathCount = 30;
+
+  function generatePaths() {
+    return Array.from({ length: pathCount }, (_, idx) => {
+      const t = idx / (pathCount - 1);
+      // Sweeping S-curves from top-left to bottom-right
+      const startX = -100 + t * 150;
+      const startY = -50 + t * 200;
+      const endX = 550 + t * 150;
+      const endY = 250 + t * 200;
+      // S-curve: first control goes up-right, second goes down-right
+      const cp1x = 100 + t * 100;
+      const cp1y = startY - 100 - Math.sin(t * Math.PI) * 80;
+      const cp2x = 400 + t * 100;
+      const cp2y = endY + 100 + Math.sin(t * Math.PI) * 80;
+
+      return {
+        d: `M${startX} ${startY} C${cp1x} ${cp1y} ${cp2x} ${cp2y} ${endX} ${endY}`,
+        width: 2 + Math.sin(t * Math.PI) * 2.5,
+      };
+    });
+  }
+
+  const paths = generatePaths();
+
   onMount(() => {
     let ctx: any;
 
@@ -11,35 +36,36 @@
         '(prefers-reduced-motion: reduce)'
       ).matches;
 
-      if (prefersReduced) return;
+      if (prefersReduced) {
+        svgRef.querySelectorAll('.bg-path').forEach((path, i) => {
+          (path as SVGPathElement).style.opacity = String(0.15 + Math.sin((i / pathCount) * Math.PI) * 0.15);
+        });
+        return;
+      }
 
       ctx = gsap.context(() => {
-        const paths = svgRef.querySelectorAll('.flow-path');
+        const els = svgRef.querySelectorAll('.bg-path');
 
-        paths.forEach((path, i) => {
+        els.forEach((path, i) => {
           const el = path as SVGPathElement;
-          const length = el.getTotalLength();
+          const len = el.getTotalLength();
+          const segLen = len * 0.35;
+          const peakOpacity = 0.35 + Math.sin((i / pathCount) * Math.PI) * 0.35;
+          const duration = 8 + (i % 8) * 1.5;
+          const delay = (i * 0.4) % 6;
 
           gsap.set(el, {
-            strokeDasharray: length,
-            strokeDashoffset: length,
+            strokeDasharray: `${segLen} ${len}`,
+            strokeDashoffset: len + segLen,
+            opacity: peakOpacity,
           });
 
           gsap.to(el, {
-            strokeDashoffset: 0,
-            duration: 3 + i * 0.6,
-            ease: 'power2.inOut',
-            delay: 0.3 + i * 0.2,
-          });
-
-          // Gentle floating drift after draw-in
-          gsap.to(el, {
-            y: `${(i % 2 === 0 ? -1 : 1) * (8 + i * 3)}`,
-            duration: 5 + i * 1.5,
-            ease: 'sine.inOut',
+            strokeDashoffset: -(len + segLen),
+            duration,
+            ease: 'none',
             repeat: -1,
-            yoyo: true,
-            delay: 3 + i * 0.8,
+            delay,
           });
         });
       }, svgRef);
@@ -54,54 +80,25 @@
 <div class="flowing-paths" aria-hidden="true">
   <svg
     bind:this={svgRef}
-    viewBox="0 0 1440 900"
+    viewBox="0 0 700 400"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     preserveAspectRatio="xMidYMid slice"
   >
-    <!-- Primary flowing curves -->
-    <path
-      class="flow-path path-1"
-      d="M-100 650 C200 580, 400 720, 600 620 S900 500, 1100 580 S1300 680, 1540 600"
-      stroke="var(--color-brand)"
-      stroke-width="1.5"
-      opacity="0.15"
-    />
-    <path
-      class="flow-path path-2"
-      d="M-50 700 C180 640, 350 760, 580 680 S850 560, 1050 640 S1250 740, 1540 660"
-      stroke="var(--color-brand)"
-      stroke-width="1"
-      opacity="0.1"
-    />
-    <path
-      class="flow-path path-3"
-      d="M-80 750 C220 700, 420 800, 640 730 S880 620, 1080 700 S1280 790, 1540 720"
-      stroke="var(--color-brand)"
-      stroke-width="0.75"
-      opacity="0.08"
-    />
-
-    <!-- Upper accent curves -->
-    <path
-      class="flow-path path-4"
-      d="M-60 300 C250 250, 500 380, 720 280 S1000 200, 1200 300 S1400 360, 1540 290"
-      stroke="var(--color-brand)"
-      stroke-width="0.75"
-      opacity="0.06"
-    />
-    <path
-      class="flow-path path-5"
-      d="M-40 400 C200 350, 450 460, 680 380 S960 300, 1160 380 S1360 440, 1540 380"
-      stroke="var(--color-brand)"
-      stroke-width="0.5"
-      opacity="0.05"
-    />
+    {#each paths as path}
+      <path
+        class="bg-path"
+        d={path.d}
+        stroke="var(--flowing-path-color)"
+        stroke-width={path.width}
+      />
+    {/each}
   </svg>
 </div>
 
 <style>
   .flowing-paths {
+    --flowing-path-color: var(--color-brand-muted);
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -114,7 +111,7 @@
     height: 100%;
   }
 
-  .flow-path {
+  .bg-path {
     fill: none;
     stroke-linecap: round;
   }
