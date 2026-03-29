@@ -1,0 +1,17 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import DashboardStats from '@/components/admin/DashboardStats.svelte';
+import { getSessionUser } from '@/lib/server/auth';
+import { siteConfig } from '@/config/site';
+
+export const prerender = false;
+
+if (!siteConfig.features.enableAdmin) return new Response(null, { status: 404 });
+
+const user = await getSessionUser(Astro.cookies);
+if (!user) return Astro.redirect('/admin/login');
+---
+
+<AdminLayout title="Dashboard" userEmail={user.email!}>
+  <DashboardStats client:load />
+</AdminLayout>
