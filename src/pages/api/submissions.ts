@@ -79,7 +79,7 @@ export const POST: APIRoute = async ({ request }) => {
   const resend = getResend();
   const siteUrl = import.meta.env.SITE_URL || 'https://northedgeoutdoor.ca';
   const adminEmail = import.meta.env.ADMIN_NOTIFICATION_EMAIL || 'info@northedgeoutdoor.ca';
-  const fromAddress = 'North Edge Outdoor <onboarding@resend.dev>'; // Switch to info@northedgeoutdoor.ca after domain verification
+  const fromAddress = `${siteConfig.business.name} <onboarding@resend.dev>`; // Switch to verified domain email after setup
 
   try {
     const confirmation = customerConfirmationEmail(sanitized);
