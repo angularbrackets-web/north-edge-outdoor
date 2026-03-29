@@ -42,13 +42,25 @@ Full plan: `~/.claude/plans/glittery-meandering-pike.md`
 - submissions.ts: from address uses config business name
 - astro.config.mjs: site URL from SITE_URL env var
 
-## Next Phase: Phase 7 — Template Scaffolding
-- Update .env.example with annotated sections
-- Create README.md with quick start, config reference, feature flags, backgrounds, Supabase setup, deployment
+### Phase 7: Template Scaffolding ✅ (commit 738106d)
+- .env.example with annotated sections (Site, Supabase, Resend, Admin)
+- README.md with quick start, config reference, feature flags, backgrounds, deployment
+- tokens.css/global.css header comments genericized
+- Fixed remaining hardcoded refs: login.astro title, WhyUs.svelte aria-label
+
+## Next Phase: Phase 8 — Create service-starter
+- Copy refactored north-edge-outdoor4 → /Users/mohammad/Projects/service-starter
+- Strip all client content (configs, assets, package.json name)
+- Replace with generic placeholders
+- Verify standalone build
 
 ## Remaining Phases
-- Phase 8: Create service-starter (copy + strip + verify)
 - Phase 9: Create /new-client global skill
 
 ## Known Issues
 - Pre-existing TS error in submissions.ts (null vs undefined for phone/message) — not introduced by us
+
+## Uncommitted Changes (pre-existing, not part of phases)
+- package.json / pnpm-lock.yaml — dependency changes from between sessions
+- Untracked source files: AuroraGlow.svelte, FloatingShapes.svelte, admin components, auth.ts, resend.ts, public logos
+- Root-level .png files — debug screenshots (not project files)
