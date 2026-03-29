@@ -1,5 +1,5 @@
 /* ============================================
-   North Edge Outdoor — Global Styles
+   Global Styles
    Tailwind v4 CSS-native configuration
    ============================================ */
 
@@ -190,6 +190,7 @@ html.theme-transitioning *::after {
 
 @layer components {
   .container {
+    position: relative;
     width: 100%;
     max-width: var(--max-w-content);
     margin-inline: auto;

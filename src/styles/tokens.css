@@ -1,6 +1,7 @@
 /* ============================================
-   North Edge Outdoor — Design Tokens
+   Design Tokens
    Dual theme: Light (default) + Dark
+   Overridden at runtime by siteConfig in Layout.astro
    ============================================ */
 
 :root {

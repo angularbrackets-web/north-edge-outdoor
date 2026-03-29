@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import BackgroundSelector from '@/backgrounds/BackgroundSelector.svelte';
+  import { siteConfig } from '@/config/site';
   import { content } from '@/config/content';
 
   let sectionRef: HTMLElement;
@@ -29,7 +30,7 @@
   bind:this={sectionRef}
   id="why-us"
   class="why-us section"
-  aria-label="Why Choose North Edge"
+  aria-label="Why Choose {siteConfig.business.name}"
 >
   <BackgroundSelector section="whyUs" />
   <div class="container">
