@@ -48,14 +48,15 @@ Full plan: `~/.claude/plans/glittery-meandering-pike.md`
 - tokens.css/global.css header comments genericized
 - Fixed remaining hardcoded refs: login.astro title, WhyUs.svelte aria-label
 
-## Next Phase: Phase 8 — Create service-starter
-- Copy refactored north-edge-outdoor4 → /Users/mohammad/Projects/service-starter
-- Strip all client content (configs, assets, package.json name)
-- Replace with generic placeholders
-- Verify standalone build
+### Phase 8: Create service-starter ✅ (commit 4565837 in service-starter repo)
+- Copied north-edge-outdoor4 → /Users/mohammad/Projects/service-starter
+- Stripped all North Edge content: site.ts, content.ts → generic placeholders
+- Removed all client media, logo; added placeholder SVG logo + media/.gitkeep dirs
+- Fixed submissions.ts fallback URLs, robots.txt sitemap URL
+- package.json name → "service-starter", removed PROGRESS.md + session-state
+- Fresh git repo, clean build verified, zero client references (grep audit passed)
 
-## Remaining Phases
-- Phase 9: Create /new-client global skill
+## Next Phase: Phase 9 — Create /new-client global skill
 
 ## Known Issues
 - Pre-existing TS error in submissions.ts (null vs undefined for phone/message) — not introduced by us
